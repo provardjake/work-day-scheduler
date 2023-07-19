@@ -38,8 +38,16 @@ $(function () {
       hourEl = parseInt(hourEl);
 
       if(hourEl === currentTime){
-        hourArray[i].removeAttr("past");
-        hourArray[i].removeAttr("future");
+        hourArray[i].removeClass("past");
+        hourArray[i].removeClass("future");
+      }
+      if (hourEl > currentTime){
+        hourArray[i].removeClass("past");
+        hourArray[i].removeClass("present");
+      }
+      if (hourEl < currentTime){
+        hourArray[i].removeClass("present");
+        hourArray[i].removeClass("future");
       }
     }
     
