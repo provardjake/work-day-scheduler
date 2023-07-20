@@ -11,26 +11,44 @@ $(function () {
   var hourFifteen = $("#hour-15");
   var hourSixteen = $("#hour-16");
   var hourSeventeen = $("#hour-17");
+  var saveBtn = $(".saveBtn");
   var hourArray = [hourNine, hourTen, hourEleven, hourTwelve,
   hourThirteen, hourFourteen, hourFifteen, hourSixteen, hourSeventeen];
+  var hourTextArray = [];
 
 
+  //gets the current date and displays it on the page
   function getCurrentDay(){
     var currentDay = $("#currentDay");
     currentDay.text(dayjs().format("MMM-DD-YYYY"));
   }
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+
+  //When the save button is clicked, saves the entered text to an array in local storage
+  saveBtn.on("click", function(event){
+    event.preventDefault();
+    var hourText = {
+      text: $(this).prev().val(), 
+      id: $(this).parent().attr("id")
+    };
+
+    
+
+    // this loop checks if a saved object already exists. if it does,
+    // replace it with the new input. 
+    for(var i = 0; i < hourTextArray.length; i++){
+      if (hourTextArray[i].id === hourText.id){
+        hourTextArray.splice(i, 1);
+      }
+    }
+
+    hourTextArray.push(hourText);
+
+    localStorage.setItem("hourTextArray", JSON.stringify(hourTextArray));
+
+
+    renderHourText();
+  })
+
   function getTimeOfDay(){
     var currentTime = dayjs().hour();
     for (var i = 0; i < hourArray.length; i++){
@@ -56,6 +74,19 @@ $(function () {
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
 
+  // function renderHourText(){
+  //   var storedHourTextArray = JSON.parse(localStorage.getItem("hourTextArray"));
+  //   console.log(storedHourTextArray);
+
+
+  //   for(var i = 0; i < hourArray.length; i++){
+  //     if(hourArray[i].attr("id") == storedHourTextArray[0].id){
+  //       hourArray[i].children(".description").text(storedHourTextArray[i].text);
+  //     }
+  //   }
+  // }
+
+  //renderHourText();
   getCurrentDay();
   getTimeOfDay();
 });
