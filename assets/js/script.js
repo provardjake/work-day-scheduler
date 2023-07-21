@@ -27,11 +27,9 @@ $(function () {
   saveBtn.on("click", function(event){
     event.preventDefault();
     var hourText = {
-      text: $(this).prev().val(), 
+      textContent: $(this).prev().val(), 
       id: $(this).parent().attr("id")
     };
-
-    
 
     // this loop checks if a saved object already exists. if it does,
     // replace it with the new input. 
@@ -45,10 +43,12 @@ $(function () {
 
     localStorage.setItem("hourTextArray", JSON.stringify(hourTextArray));
 
-
     renderHourText();
   })
 
+  
+  // this function gets the current time and compares it to the data-hour of each element. 
+  // gives styling based on the comparison
   function getTimeOfDay(){
     var currentTime = dayjs().hour();
     for (var i = 0; i < hourArray.length; i++){
@@ -70,23 +70,20 @@ $(function () {
     }
     
   }
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-
-  // function renderHourText(){
-  //   var storedHourTextArray = JSON.parse(localStorage.getItem("hourTextArray"));
-  //   console.log(storedHourTextArray);
 
 
-  //   for(var i = 0; i < hourArray.length; i++){
-  //     if(hourArray[i].attr("id") == storedHourTextArray[0].id){
-  //       hourArray[i].children(".description").text(storedHourTextArray[i].text);
-  //     }
-  //   }
-  // }
+  //this function displays the stored text to each of the time blocks
+  function renderHourText(){
+    var storedHourTextArray = JSON.parse(localStorage.getItem("hourTextArray"));
 
-  //renderHourText();
+    for(var i = 0; i < hourArray.length; i++){
+      if(hourArray[i].attr("id") == storedHourTextArray[0].id){
+        hourArray[i].children("textarea").text(storedHourTextArray[i].textContent);
+      }
+    }
+  }
+
+  renderHourText();
   getCurrentDay();
   getTimeOfDay();
 });
